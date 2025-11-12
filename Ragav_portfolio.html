@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RagavRamasamy</title>
+  <meta name="description" content="Ragav Ramasamy"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <!-- Favicon / Site Icon -->
+  <link rel="icon" href="R_logo_black.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <meta name="theme-color" content="#000000"/>
+
+  <style>
+    :root{
+      --bg:#000; --ink:#eaeef8; --muted:#9aa3b2; --line:#bde7ff; --line2:#b399ff;
+      --brand:#7dd3fc; --brand2:#a78bfa; --accent:#22d3ee; --glass:rgba(255,255,255,.06);
+    }
+    html,body{height:100%; scroll-behavior:smooth}
+    body{margin:0; color:var(--ink); background:var(--bg); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:var(--brand)} a:hover{color:#d6f3ff}
+
+    /* Full reactive background canvas */
+    #bg{position:fixed; inset:0; width:100vw; height:100vh; z-index:-1; display:block; will-change:transform;}
+    .vignette{position:fixed; inset:0; pointer-events:none; background:
+      radial-gradient(1200px 500px at -10% -10%, rgba(167,139,250,.10), transparent 60%),
+      radial-gradient(900px 400px at 110% 0, rgba(125,211,252,.10), transparent 55%),
+      radial-gradient(600px 300px at 50% 120%, rgba(34,211,238,.08), transparent 60%),
+      radial-gradient(circle at 50% 60%, rgba(0,0,0,.0) 0, rgba(0,0,0,.18) 62%, rgba(0,0,0,.38) 100%)}
+
+    /* NAV (optional) */
+    .nav{position:fixed; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:16px 24px; backdrop-filter:saturate(140%) blur(6px); background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.15)); border-bottom:1px solid rgba(255,255,255,.06); z-index:10}
+    .nav a{color:var(--muted); text-decoration:none; font-weight:600; margin:0 10px}
+    .nav a:hover{color:var(--ink)}
+
+    /* Sections */
+    section{padding:72px 20px}
+    .container{max-width:1100px; margin:0 auto}
+    .section-title{font-weight:900; margin:0 0 10px}
+    .section-sub{color:var(--muted); margin:0 0 24px}
+
+    /* HERO */
+    .hero{min-height:100svh; display:grid; place-items:center; text-align:center; position:relative}
+    .title{font-weight:900; font-size:min(12vw,90px); line-height:0.95; letter-spacing:.5px; margin:0; filter:drop-shadow(0 0 0 rgba(125,211,252,0)); animation:glow 5s ease-in-out infinite}
+    .gradient-text{background:linear-gradient(90deg,var(--brand),var(--brand2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .subtitle{color:var(--muted); margin:.9rem auto 1.6rem; max-width:820px}
+    .cta{display:flex; justify-content:center; gap:12px; flex-wrap:wrap}
+    .btn{border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.03); color:var(--ink); padding:.9rem 1.2rem; border-radius:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem; transition:transform .15s ease, box-shadow .2s}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 10px 30px rgba(125,211,252,.15)}
+    .btn.fill{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#001018; border:none}
+    .caret{display:inline-block; width:10px; height:1.1em; background:linear-gradient(180deg,var(--brand),var(--brand2)); margin-left:6px; transform:translateY(3px); animation:blink .9s step-end infinite}
+    @keyframes blink{50%{opacity:0}}
+    @keyframes glow{0%,100%{text-shadow:0 0 0 rgba(125,211,252,.0)}50%{text-shadow:0 0 24px rgba(125,211,252,.22)}}
+
+    /* Cards / grid */
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px}
+    .card{position:relative; border-radius:18px; padding:18px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); overflow:hidden; transform-style:preserve-3d; transition:transform .2s ease, box-shadow .2s}
+    .card:hover{box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .thumb{height:160px; border-radius:12px; background:linear-gradient(135deg, rgba(125,211,252,.18), rgba(167,139,250,.18)); position:relative; overflow:hidden}
+    .shine{position:absolute; inset:0; background:radial-gradient(800px 200px at var(--mx,50%) -10%, rgba(255,255,255,.25), transparent 60%); mix-blend:screen}
+    .tag{font-size:.75rem; display:inline-block; padding:.25rem .55rem; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); margin-right:.35rem}
+
+    /* Timeline */
+    .journey .track{position:relative; padding-left:1.4rem}
+    .journey .track:before{content:""; position:absolute; left:.5rem; top:.3rem; bottom:.3rem; width:2px; background:linear-gradient(180deg, var(--brand), var(--brand2))}
+    .journey .stop{position:relative; margin-left:.6rem; margin-bottom:18px; padding:14px 16px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08)}
+    .journey .stop:before{content:""; position:absolute; left:-1.05rem; top:18px; width:.75rem; height:.75rem; border-radius:50%; background:linear-gradient(180deg, var(--brand), var(--brand2)); box-shadow:0 0 0 5px rgba(125,211,252,.15)}
+    .journey .when{font-weight:800; letter-spacing:.2px}
+    .journey .what{font-weight:700}
+    .journey .where{color:var(--muted)}
+    .journey .meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+    .journey .chip{padding:.3rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.04); font-weight:700}
+
+    @media (min-width: 900px){
+      .journey .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:22px}
+    }
+
+    /* Certifications (click-to-reveal) */
+    .certs-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px}
+    .cert{position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.08); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02))}
+    .cert button{width:100%; aspect-ratio:16/10; border:0; background:transparent; color:var(--muted); font-weight:700; cursor:pointer; position:relative}
+    .cert button::after{content:"Click to reveal"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); padding:.5rem .8rem; border-radius:999px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.04)}
+    .cert img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.06); transition:opacity .35s ease, transform .45s ease; filter:drop-shadow(0 8px 30px rgba(0,0,0,.5))}
+    .cert.open img{opacity:1; transform:scale(1)}
+    .cert.open button::after{opacity:0}
+
+    /* Skills (chip grid) */
+    .skills-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:10px}
+    .skill{display:flex; align-items:center; gap:10px; padding:.65rem .8rem; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); font-weight:700}
+    .skill i{opacity:.9}
+
+    /* Project links */
+    .links-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px}
+    .link-card{display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); text-decoration:none; color:var(--ink); transition:transform .15s ease, box-shadow .2s}
+    .link-card:hover{transform:translateY(-2px); box-shadow:0 18px 40px rgba(0,0,0,.35)}
+    .link-card i{font-size:22px}
+    .link-card small{color:var(--muted); display:block}
+
+    /* Footer */
+    footer{padding:40px 20px; color:var(--muted); text-align:center}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+
+  
+    /* === Lightbox overlay === */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.lightbox.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(125,211,252,0.3);
+  transform: scale(0.9);
+  transition: transform 0.35s ease;
+}
+.lightbox.active img {
+  transform: scale(1);
+}
+.lightbox .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  background: rgba(255,255,255,0.1);
+  color: var(--ink);
+  font-size: 28px;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition: background 0.2s;
+}
+.lightbox .close-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+  </style>
+</head>
+<body>
+  <!-- Reactive background -->
+  <canvas id="bg"></canvas>
+  <div class="vignette"></div>
+
+  <!-- HERO -->
+  <header class="hero" id="home">
+    <div class="container">
+      <h1 class="title" aria-label="RAGAV RAMASAMY">
+        <span id="typewriter" class="gradient-text"></span>
+        <span class="caret" aria-hidden="true"></span>
+      </h1>
+      <p class="subtitle">
+        A Masters graduate student with a strong foundation in Web development, Data analysis and Business strategy.
+        Experienced in using analytical tools and creative platforms to deliver insights, build solutions, and support decision-making across diverse projects.
+      </p>
+      <div class="cta fade-in"></div>
+    </div>
+  </header>
+
+  <!-- PROFESSIONAL JOURNEY -->
+  <section id="journey" class="journey">
+    <div class="container">
+      <h2 class="section-title">Professional Journey</h2>
+      <p class="section-sub">A quick path from school to analytics & web development.</p>
+      <div class="grid">
+        <div>
+          <div class="track">
+            <div class="stop">
+              <div class="when">2024–2025</div>
+              <div class="what">Master’s in Business Analytics</div>
+              <div class="where">University College Dublin (UCD) , Dublin</div>
+              <div class="meta"><span class="chip">Optimization</span><span class="chip">ML</span><span class="chip">Python</span></div>
+            </div>
+            <div class="stop">
+              <div class="when">2023–2024</div>
+              <div class="what">Web Developer</div>
+              <div class="where">IQ TechMax Solutions , Chennai</div>
+              <div class="meta"><span class="chip">Frontend</span><span class="chip">Analysis</span><span class="chip">Performance</span></div>
+            </div>
+            <div class="stop">
+              <div class="when">2023–2023</div>
+              <div class="what">Equity Research Analyst (Internship)</div>
+              <div class="where">Kotak Securities , Chennai </div>
+              <div class="meta"><span class="chip">Data Analysis</span><span class="chip">Insurance</span><span class="chip">Security</span></div>
+            </div>
+            <div class="stop">
+              <div class="when">2019–2023</div>
+              <div class="what">B.E. Electronics & Communication</div>
+              <div class="where">Sathyabama Institute of Science and Technology , Chennai</div>
+              <div class="meta"><span class="chip">Programming</span><span class="chip">Core</span></div>
+            </div>
+            <div class="stop">
+              <div class="when">2018–2019</div>
+              <div class="what">Higher Secondary</div>
+              <div class="where">S.B.O.A. Mat. Hr. Sec. School , Chennai</div>
+            </div>
+            <div class="stop">
+              <div class="when">2016–2017</div>
+              <div class="what">Secondary Education</div>
+              <div class="where">S.B.O.A. Mat. Hr. Sec. School , Chennai</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDUCATION CARD (replaces old Highlights) -->
+        <div>
+          <div class="card">
+            <h4>Education - Projects</h4>
+            <ul style="margin:8px 0 0 18px; color:var(--muted)">
+              <li><b>Master’s in Business Analytics</b> <br> UCD, Dublin (2024–2025) <br><br> <b>Fairness in Sports Scheduling </b><br><br>This project investigates
+                 the fairness of English Premier League (EPL) fixture schedules using historical match data. It analyzes key factors
+                  such as rest day differences, travel distances, opponent difficulty, and home/away sequencing to quantify scheduling
+                   bias. Through statistical analysis and simulation modeling, the study provides actionable insights and recommendations
+                    to improve competitive balance and scheduling transparency in professional football.</li> <br><br>
+              <li><b>B.E. Electronics & Communication</b> <br> Sathyabama Institute (2019–2023) <br><br> <b>Blind Assist Gloves </b> <br><br> A smart wearable prototype that assists visually impaired
+                 users using ultrasonic sensors to detect obstacles and provide real-time haptic feedback, improving navigation safety and
+                  independence. <br><br></li>
+                  <li><b>Personal Project</b> <br><br> <b>Share Market App Designing </b> <br><br> A Flutter-based share market app featuring 
+                    real-time stock tracking, interactive charts, watchlists, 
+                    and a clean modern UI, designed to deliver fast, intuitive, and user-friendly market insights. <br><br></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS (click to reveal 6 images) -->
+  <section id="certs">
+    <div class="container">
+      <h2 class="section-title">Certifications</h2>
+      <p class="section-sub">Click each tile to reveal the certificate.</p>
+      <div class="certs-grid">
+        <div class="cert"><button aria-label="Reveal certificate 1"></button><img src="certificate-1.jpeg" alt="Certificate 1"></div>
+        <div class="cert"><button aria-label="Reveal certificate 2"></button><img src="certificate-2.jpeg" alt="Certificate 2"></div>
+        <div class="cert"><button aria-label="Reveal certificate 3"></button><img src="certificate-4.jpeg" alt="Certificate 3"></div>
+        <div class="cert"><button aria-label="Reveal certificate 5"></button><img src="certificate-5.png" alt="Certificate 5"></div>
+        <div class="cert"><button aria-label="Reveal certificate 6"></button><img src="Certificate_6.png" alt="Certificate 6"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS (chip grid) -->
+  <section id="skills">
+    <div class="container">
+      <h2 class="section-title">Skills</h2>
+      <p class="section-sub">The tools and platforms I use to build, analyze, and ship.</p>
+      <div class="skills-grid">
+        <div class="skill"><i class="fa-brands fa-html5"></i>HTML</div>
+        <div class="skill"><i class="fa-brands fa-css3-alt"></i>CSS</div>
+        <div class="skill"><i class="fa-brands fa-bootstrap"></i>Bootstrap</div>
+        <div class="skill"><i class="fa-brands fa-square-js"></i>JavaScript</div>
+        <div class="skill"><i class="fa-brands fa-php"></i>PHP</div>
+        <div class="skill"><i class="fa-solid fa-database"></i>SQL</div>
+        <div class="skill"><i class="fa-brands fa-python"></i>Python</div>
+        <div class="skill"><i class="fa-brands fa-wordpress"></i>WordPress</div>
+        <div class="skill"><i class="fa-brands fa-r-project"></i>R</div>
+        <div class="skill"><i class="fa-solid fa-chart-simple"></i>Tableau</div>
+        <div class="skill"><i class="fa-brands fa-figma"></i>Figma</div>
+        <div class="skill"><i class="fa-solid fa-pencil-ruler"></i>Canva</div>
+        <div class="skill"><i class="fa-solid fa-file-word"></i>Microsoft Office</div>
+        <div class="skill"><i class="fa-brands fa-react"></i>React.js</div>
+        <div class="skill"><i class="fa-brands fa-jira"></i>Jira</div>
+        <div class="skill"><i class="fa-solid fa-clipboard-check"></i>UAT</div>
+        <div class="skill"><i class="fa-solid fa-magnifying-glass-chart"></i>SEO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT LINKS -->
+  <section id="links">
+    <div class="container">
+      <h2 class="section-title">Project Links</h2>
+      <p class="section-sub">Tap to dive into the repos and live demos.</p>
+      <div class="links-grid">
+        <a class="link-card" href="https://www.linkedin.com/in/ragav-ramasamy-855b2a254/recent-activity/all/" target="_blank" rel="noopener">
+          <i class="fa-solid fa-chart-line"></i>
+          <div><b>Google Stock Sentiment Analysis</b><small></div>
+        </a>
+        <a class="link-card" href="https://github.com/RagavRamasamy/Shortest-Path---Heuristics-" target="_blank" rel="noopener">
+          <i class="fa-solid fa-gift"></i>
+          <div><b>Heuristics Analysis</b><small></small></div>
+        </a><br>
+        <a class="link-card" href="https://lnkd.in/gbQMArvA" target="_blank" rel="noopener">
+          <i class="fa-solid fa-gauge-high"></i>
+          <div><b>Blog Writing </b><small></small></div>
+        </a>
+        <!-- <a class="link-card" href="#" target="_blank" rel="noopener">
+          <i class="fa-solid fa-brain"></i>
+          <div><b>Driver Fatigue Detection</b><small>Repo / Live</small></div>
+        </a> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK (kept for visual cards demo) -->
+  <section id="work">
+    <div class="container">
+      <h2 class="section-title">Selected Work</h2><br>
+      <!-- <p class="section-sub">Hover for shine • cards tilt to your cursor</p> -->
+      <div class="grid">
+        <article class="card" data-tilt>
+          <div class=""><div class="shine"></div></div>
+          <h4>Web Development</h4>
+          <p class="muted">I’m capable of creating end-to-end solutions including UI/UX design, frontend development, backend APIs and full deployment. I focus on speed, usability and delivering seamless digital experiences.</p>
+          <!-- <span class="tag">Streamlit</span><span class="tag">NLP</span><span class="tag">PyMC</span> -->
+        </article>
+        <article class="card" data-tilt>
+          <div class=""><div class="shine"></div></div>
+          <h4>Business Analyst</h4>
+          <p class="muted">I specialise in understanding business needs, analysing processes, and turning them into actionable, 
+            data-driven solutions. I’m skilled in requirements gathering, process mapping, user stories, workflow optimisation, 
+            dashboard creation, and supporting decision-making through clear insights.</p>
+          <!-- <span class="tag">React</span><span class="tag">MongoDB</span><span class="tag">Node</span> -->
+        </article>
+        <!-- <article class="card" data-tilt>
+          <div class="thumb"><div class="shine"></div></div>
+          <h4>BI-360 — AtliQ Hardware Dashboard</h4>
+          <p class="muted">Executive metrics: revenue, margin, geography drilldowns. Export-ready visuals.</p>
+          <span class="tag">Power BI</span><span class="tag">SQL</span><span class="tag">DAX</span>
+        </article> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title">About</h2>
+      <p class="section-sub">A quick snapshot.</p>
+      <div class="grid">
+        <div class="card">
+          <h4>Who I am</h4>
+          <p>BA with a designer’s eye. I ship clean dashboards, performant frontends, and tidy repos. Currently in Dublin, open to EU roles.</p>
+          <p><i class="fa-solid fa-location-dot"></i> Dublin · 
+            <i class="fa-solid fa-clock"></i> Replies - 24h
+          </p>
+        </div>
+        <div class="card">
+          <h4>Interests</h4>
+          <p>Data storytelling, performance tuning, and crafting delightful UX. <br>Always learning, Always upgrading.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT (unchanged) -->
+  <section id="contact">
+    <div class="container" style="text-align:center">
+      <h2 class="section-title">Contact</h2>
+      <p class="section-sub">Have an opportunity or collab? Let’s build something delightful.</p>
+      <div class="cta">
+        <a class="btn fill" href="mailto:ragavramasamy23@gmail.com"><i class="fa-solid fa-envelope"></i> Email</a>
+        <a class="btn" href="https://www.linkedin.com/in/ragav-ramasamy-855b2a254" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+        <a class="btn" href="https://github.com/RagavRamasamy" target="_blank"><i class="fa-brands fa-github"></i> Github</a>
+        <!-- <a class="btn" href="tel:+353899598356"><i class="fa-solid fa-phone"></i> Call</a> -->
+      </div>
+    </div>
+  </section>
+  
+
+  <footer>
+    © <span id="year"></span> Ragav Ramasamy
+  </footer>
+
+  <script>
+    // ===== Background constellation =====
+    const cvs = document.getElementById('bg');
+    const ctx = cvs.getContext('2d');
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let W,H,PTS=[],N; const mouse = {x:0,y:0,active:false}; const trail=[];
+    function resize(){
+      W = cvs.width = innerWidth * DPR; H = cvs.height = innerHeight * DPR;
+      cvs.style.width = innerWidth + 'px'; cvs.style.height = innerHeight + 'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      N = Math.min(260, Math.max(140, Math.round((innerWidth*innerHeight)/9000)));
+      PTS = Array.from({length:N}, ()=>({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35 }));
+    }
+    function tick(){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      const scrollBoost = Math.min(1, Math.abs(scrollY)*0.0006);
+      for(const p of PTS){
+        p.x += p.vx*(1+scrollBoost); p.y += p.vy*(1+scrollBoost);
+        if(p.x<0||p.x>innerWidth) p.vx*=-1; if(p.y<0||p.y>innerHeight) p.vy*=-1;
+        if(mouse.active){
+          const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.hypot(dx,dy);
+          const pull = d<200 ? (200-d)/200 : 0; p.vx += (dx/d||0)*pull*.42; p.vy += (dy/d||0)*pull*.42;
+        }
+      }
+      for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+        const a=PTS[i], b=PTS[j]; const d = Math.hypot(a.x-b.x, a.y-b.y);
+        if(d<120){ const t = 1 - d/120; ctx.globalAlpha = t; ctx.strokeStyle = `rgba(189,231,255,${0.22 + t*0.35})`;
+          ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+      }
+      ctx.globalAlpha=1; ctx.fillStyle='#bde7ff';
+      for(const p of PTS){ ctx.beginPath(); ctx.arc(p.x,p.y,1.4,0,Math.PI*2); ctx.fill(); }
+      if(trail.length>1){ ctx.lineWidth=2; ctx.strokeStyle='rgba(167,139,250,.35)'; ctx.beginPath();
+        for(let i=0;i<trail.length-1;i++){ const a=trail[i], b=trail[i+1]; ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); } ctx.stroke(); }
+      requestAnimationFrame(tick);
+    }
+    resize(); tick();
+    addEventListener('resize', resize);
+    addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; mouse.active=true; trail.push({x:e.clientX,y:e.clientY}); if(trail.length>24) trail.shift(); });
+    addEventListener('mouseleave', ()=> {mouse.active=false; trail.length=0;});
+
+    // Typewriter
+    (function(){ const el = document.getElementById('typewriter'); const text = 'RAGAV RAMASAMY'; let i=0;
+      function type(){ if(i<=text.length){ el.textContent=text.slice(0,i); i++; setTimeout(type, i<6?160:80);} } type();
+    })();
+
+    // Tilt cards
+    document.querySelectorAll('[data-tilt]').forEach(card=>{
+      const shine=card.querySelector('.shine');
+      card.addEventListener('mousemove', e=>{
+        const r=card.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`rotateX(${-py*6}deg) rotateY(${px*6}deg) translateZ(0)`; shine && shine.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      });
+      card.addEventListener('mouseleave', ()=> card.style.transform='');
+    });
+
+    // Certifications click-to-reveal
+    document.querySelectorAll('.cert').forEach(tile=>{
+      tile.addEventListener('click', ()=> tile.classList.toggle('open'));
+    });
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Click burst particles
+    window.addEventListener('click', (e)=>{
+      const burst=document.createElement('span'); Object.assign(burst.style,{
+        position:'fixed',left:e.clientX+'px',top:e.clientY+'px',width:'8px',height:'8px',borderRadius:'50%',
+        background:'radial-gradient(circle, rgba(125,211,252,1) 0%, rgba(167,139,250,1) 100%)',
+        pointerEvents:'none',transform:'translate(-50%,-50%) scale(1)',transition:'transform .6s ease, opacity .6s ease'
+      });
+      document.body.appendChild(burst); requestAnimationFrame(()=>{ burst.style.transform='translate(-50%,-50%) scale(9)'; burst.style.opacity='0'; });
+      setTimeout(()=> burst.remove(), 650);
+    });
+
+    // === Certificate Lightbox ===
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+const closeBtn = document.getElementById('closeLightbox');
+
+document.querySelectorAll('.cert img').forEach(img => {
+  img.parentElement.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightbox.classList.add('active');
+  });
+});
+
+closeBtn.addEventListener('click', () => {
+  lightbox.classList.remove('active');
+});
+
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) lightbox.classList.remove('active');
+});
+
+  </script>
+
+</body>
+</html>

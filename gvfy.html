@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RagavRamasamy.in — Black Neon Portfolio</title>
+  <meta name="description" content="Ragav Ramasamy — Interactive one-page portfolio with reactive background."/>
+  <link rel="icon" href="icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <meta name="theme-color" content="#000000"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000; --ink:#eaeef8; --muted:#9aa3b2;
+      --brand:#7dd3fc; --brand2:#a78bfa;
+    }
+    html,body{height:100%;scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--bg);font-family:'Inter',sans-serif}
+
+    #bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;display:block}
+    .vignette{position:fixed;inset:0;pointer-events:none;background:
+      radial-gradient(1200px 500px at -10% -10%, rgba(167,139,250,.10), transparent 60%),
+      radial-gradient(900px 400px at 110% 0, rgba(125,211,252,.10), transparent 55%),
+      radial-gradient(600px 300px at 50% 120%, rgba(34,211,238,.08), transparent 60%)}
+
+    section{padding:72px 20px}
+    .container{max-width:1100px;margin:0 auto}
+    .section-title{font-weight:900;margin:0 0 10px}
+    .section-sub{color:var(--muted);margin:0 0 24px}
+
+    .hero{min-height:100svh;display:grid;place-items:center;text-align:center}
+    .title{font-weight:900;font-size:min(12vw,90px);line-height:.95;margin:0;animation:glow 5s ease-in-out infinite}
+    .gradient-text{background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    @keyframes glow{0%,100%{text-shadow:0 0 0 rgba(125,211,252,0)}50%{text-shadow:0 0 24px rgba(125,211,252,.22)}}
+    .subtitle{color:var(--muted);max-width:800px;margin:.9rem auto 1.6rem}
+    .caret{display:inline-block;width:10px;height:1.1em;background:linear-gradient(180deg,var(--brand),var(--brand2));margin-left:6px;animation:blink .9s step-end infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* Journey timeline */
+    .journey .track{position:relative;padding-left:1.4rem}
+    .journey .track:before{content:"";position:absolute;left:.5rem;top:.3rem;bottom:.3rem;width:2px;background:linear-gradient(180deg,var(--brand),var(--brand2))}
+    .journey .stop{position:relative;margin-left:.6rem;margin-bottom:20px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+    .journey .stop:before{content:"";position:absolute;left:-1.05rem;top:18px;width:.75rem;height:.75rem;border-radius:50%;background:linear-gradient(180deg,var(--brand),var(--brand2));box-shadow:0 0 0 5px rgba(125,211,252,.15)}
+    .journey .when{font-weight:800}
+    .journey .what{font-weight:700}
+    .journey .where{color:var(--muted)}
+    .journey .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .journey .chip{padding:.3rem .6rem;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);font-weight:700}
+
+    /* Certifications */
+    .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .cert{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer}
+    .cert img{width:100%;height:auto;display:block;opacity:.8;transition:opacity .3s ease}
+    .cert:hover img{opacity:1}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s ease}
+    .lightbox.active{opacity:1;pointer-events:all}
+    .lightbox img{max-width:90vw;max-height:85vh;border-radius:12px;box-shadow:0 0 40px rgba(125,211,252,0.3);transform:scale(.9);transition:transform .3s ease}
+    .lightbox.active img{transform:scale(1)}
+    .lightbox .close-btn{position:absolute;top:20px;right:28px;background:rgba(255,255,255,.1);color:var(--ink);font-size:28px;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;backdrop-filter:blur(3px)}
+    .lightbox .close-btn:hover{background:rgba(255,255,255,.25)}
+
+    /* Skills */
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+    .skill{display:flex;align-items:center;gap:10px;padding:.65rem .8rem;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-weight:700}
+    .skill i{opacity:.9}
+
+    /* Links */
+    .links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .link-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);text-decoration:none;color:var(--ink);transition:transform .15s ease,box-shadow .2s}
+    .link-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+
+    footer{padding:40px 20px;color:var(--muted);text-align:center}
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="vignette"></div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="title"><span id="typewriter" class="gradient-text"></span><span class="caret"></span></h1>
+      <p class="subtitle">
+        A Master's graduate with a strong foundation in Web Development, Data Analysis, and Business Strategy — blending analytical insight with creative execution.
+      </p>
+    </div>
+  </header>
+
+  <!-- PROFESSIONAL JOURNEY -->
+  <section id="journey" class="journey">
+    <div class="container">
+      <h2 class="section-title">Professional Journey</h2>
+      <p class="section-sub">A timeline of learning, growth, and creation.</p>
+
+      <div class="track">
+        <div class="stop">
+          <div class="when">2024–2025</div>
+          <div class="what">Master’s in Business Analytics</div>
+          <div class="where">University College Dublin (UCD), Dublin</div>
+          <div class="meta"><span class="chip">Optimization</span><span class="chip">ML</span><span class="chip">Cloud</span></div>
+        </div>
+        <div class="stop">
+          <div class="when">2023–2024</div>
+          <div class="what">Web Developer (Full-Time)</div>
+          <div class="where">IQ TechMax Solutions, Chennai</div>
+          <div class="meta"><span class="chip">Frontend</span><span class="chip">SEO</span><span class="chip">Performance</span></div>
+        </div>
+        <div class="stop">
+          <div class="when">2019–2023</div>
+          <div class="what">B.E. Electronics & Communication</div>
+          <div class="where">Sathyabama Institute of Science and Technology</div>
+          <div class="meta"><span class="chip">Robotics minor</span><span class="chip">Projects</span></div>
+        </div>
+        <div class="stop">
+          <div class="when">2018–2019</div>
+          <div class="what">Higher Secondary</div>
+          <div class="where">S.B.O.A. Mat. Hr. Sec. School</div>
+        </div>
+        <div class="stop">
+          <div class="when">2016–2017</div>
+          <div class="what">Secondary Education</div>
+          <div class="where">S.B.O.A. Mat. Hr. Sec. School</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certs">
+    <div class="container">
+      <h2 class="section-title">Certifications</h2>
+      <p class="section-sub">Click a certificate to enlarge.</p>
+      <div class="certs-grid">
+        <div class="cert"><img src="certificate-1.jpeg" alt="Certificate 1"></div>
+        <div class="cert"><img src="certificate-2.jpeg" alt="Certificate 2"></div>
+        <div class="cert"><img src="certificate-3.jpeg" alt="Certificate 3"></div>
+        <div class="cert"><img src="certificate-4.jpeg" alt="Certificate 4"></div>
+        <div class="cert"><img src="certificate-5.jpeg" alt="Certificate 5"></div>
+        <div class="cert"><img src="certificate-6.jpeg" alt="Certificate 6"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <h2 class="section-title">Skills</h2>
+      <div class="skills-grid">
+        <div class="skill"><i class="fa-brands fa-html5"></i>HTML</div>
+        <div class="skill"><i class="fa-brands fa-css3-alt"></i>CSS</div>
+        <div class="skill"><i class="fa-brands fa-bootstrap"></i>Bootstrap</div>
+        <div class="skill"><i class="fa-brands fa-square-js"></i>JavaScript</div>
+        <div class="skill"><i class="fa-brands fa-php"></i>PHP</div>
+        <div class="skill"><i class="fa-solid fa-database"></i>SQL</div>
+        <div class="skill"><i class="fa-brands fa-python"></i>Python</div>
+        <div class="skill"><i class="fa-brands fa-wordpress"></i>WordPress</div>
+        <div class="skill"><i class="fa-brands fa-r-project"></i>R</div>
+        <div class="skill"><i class="fa-solid fa-chart-simple"></i>Tableau</div>
+        <div class="skill"><i class="fa-brands fa-figma"></i>Figma</div>
+        <div class="skill"><i class="fa-solid fa-pencil-ruler"></i>UI/UX Design</div>
+        <div class="skill"><i class="fa-brands fa-react"></i>React.js</div>
+        <div class="skill"><i class="fa-brands fa-jira"></i>Jira</div>
+        <div class="skill"><i class="fa-solid fa-clipboard-check"></i>UAT</div>
+        <div class="skill"><i class="fa-solid fa-magnifying-glass-chart"></i>SEO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT LINKS -->
+  <section id="links">
+    <div class="container">
+      <h2 class="section-title">Project Links</h2>
+      <div class="links-grid">
+        <a class="link-card" href="#"><i class="fa-solid fa-chart-line"></i>Bayesian Stock Sentiment Estimator</a>
+        <a class="link-card" href="#"><i class="fa-solid fa-gift"></i>FetchIt — Gift Card Marketplace</a>
+        <a class="link-card" href="#"><i class="fa-solid fa-gauge-high"></i>BI-360 — AtliQ Hardware Dashboard</a>
+        <a class="link-card" href="#"><i class="fa-solid fa-brain"></i>Driver Fatigue Detection</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container" style="text-align:center">
+      <h2 class="section-title">Contact</h2>
+      <p class="section-sub">Have an opportunity or collab? Let’s build something delightful.</p>
+      <div class="cta">
+        <a class="link-card" href="mailto:ragavramasamy23@gmail.com"><i class="fa-solid fa-envelope"></i>Email</a>
+        <a class="link-card" href="https://www.linkedin.com/in/ragav-ramasamy-855b2a254" target="_blank"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
+        <a class="link-card" href="tel:+353899598356"><i class="fa-solid fa-phone"></i>Call</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>© <span id="year"></span> Ragav Ramasamy — Built with HTML, CSS & JS</footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="close-btn" id="closeLightbox">&times;</button>
+    <img src="" alt="Enlarged certificate">
+  </div>
+
+  <script>
+    // Background constellation
+    const cvs=document.getElementById('bg'),ctx=cvs.getContext('2d');let W,H,PTS=[],N;const mouse={x:0,y:0,active:false},trail=[];
+    function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight;PTS=Array.from({length:200},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))}
+    function tick(){ctx.clearRect(0,0,W,H);for(const p of PTS){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      for(const q of PTS){const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<110){ctx.strokeStyle='rgba(189,231,255,'+(1-d/120)+')';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}}}
+      ctx.fillStyle='#bde7ff';for(const p of PTS){ctx.beginPath();ctx.arc(p.x,p.y,1.2,0,Math.PI*2);ctx.fill();}requestAnimationFrame(tick);}
+    resize();tick();addEventListener('resize',resize);
+
+    // Typewriter
+    (function(){const el=document.getElementById('typewriter'),t='RAGAV RAMASAMY';let i=0;function type(){if(i<=t.length){el.textContent=t.slice(0,i);i++;setTimeout(type,i<6?160:80);} }type();})();
+
+    // Lightbox logic
+    const lightbox=document.getElementById('lightbox'),imgBox=lightbox.querySelector('img');
+    document.querySelectorAll('.cert img').forEach(img=>{
+      img.addEventListener('click',()=>{imgBox.src=img.src;lightbox.classList.add('active');});
+    });
+    document.getElementById('closeLightbox').onclick=()=>lightbox.classList.remove('active');
+    lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.classList.remove('active');});
+    document.getElementById('year').textContent=new Date().getFullYear();
+  </script>
+</body>
+</html>
